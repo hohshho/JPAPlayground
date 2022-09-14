@@ -21,7 +21,7 @@ public class JpaMain {
             // 비영속
             Member member = new Member();
             member.setId(100L);
-            member.setName("HelloJPA");
+            member.setUsername("HelloJPA");
 
             // 영속
             System.out.println("--- BEFORE ---");
