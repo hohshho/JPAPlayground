@@ -30,7 +30,6 @@ public class JpaMain {
 
             // 양방향 매핑 시 양쪽 모두에 값 입력
             team.getMembers().add(member);
-            member.setTeam(team);
 
             em.persist(member);
 
@@ -40,11 +39,7 @@ public class JpaMain {
 
             // 조회
             Member findMember = em.find(Member.class, member.getId());
-            List<Member> members = findMember.getTeam().getMembers();
 
-            for( Member m : members){
-                System.out.println("m = " + m.getName());
-            }
 
             // 연관관계가 없음
             Team findTeam = em.find(Team.class, team.getId());

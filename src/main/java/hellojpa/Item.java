@@ -7,7 +7,6 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Getter
@@ -15,19 +14,17 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class Member {
+public class Item {
 
-    @Id
-    @GeneratedValue
+    @Id @GeneratedValue
+    @Column(name = "item_id")
     private Long id;
 
     private String name;
+    private int price;
+    private int stockQuantity;
 
-    private String city;
-    private String street;
-    private String zipcode;
-
-    @OneToMany(mappedBy = "member")
-    private List<Order> orders = new ArrayList<>();
+    @ManyToMany(mappedBy = "items")
+    private List<Category> categories = new ArrayList<>();
 
 }
