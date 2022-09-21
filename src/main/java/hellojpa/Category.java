@@ -9,6 +9,8 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static javax.persistence.FetchType.LAZY;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -22,14 +24,14 @@ public class Category {
 
     private String name;
 
-    @ManyToMany
+    @ManyToMany(fetch = LAZY)
     @JoinTable(name = "category_item",
             joinColumns = @JoinColumn(name = "category_id"),
             inverseJoinColumns = @JoinColumn(name = "item_id"))
     private List<Item> items = new ArrayList<>();
 
     // 카테고리의 계층 구조를 위한 필드들
-    @ManyToOne
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "parent_id")
     private Category parent;
 

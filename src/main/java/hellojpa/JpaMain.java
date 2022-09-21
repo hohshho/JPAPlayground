@@ -18,18 +18,11 @@ public class JpaMain {
         tx.begin();
 
         try{
-            // 팀 저장
-            Team team = new Team();
-            team.setName("TeamA");
-            em.persist(team);
 
-            // 회원 저장
             Member member = new Member();
-            // 회원1에 새로운 팀B 설정
-            member.setName("member1");
-
-            // 양방향 매핑 시 양쪽 모두에 값 입력
-            team.getMembers().add(member);
+            member.setName("hello");
+            member.setHomeAddress(new Address("city", "street", "zipcode"));
+            member.setWorkPeriod(new Period());
 
             em.persist(member);
 
@@ -37,18 +30,11 @@ public class JpaMain {
             em.flush();
             em.clear();
 
-            // 조회
-            Member findMember = em.find(Member.class, member.getId());
-
-
-            // 연관관계가 없음
-            Team findTeam = em.find(Team.class, team.getId());
-
-            // 영속
-            System.out.println("--- BEFORE ---");
-            em.persist(member);
-            System.out.println("--- AFTER ---");
-
+//            Member findMember = em.find(Member.class, member.getId());
+            Member findMember = em.getReference(Member.class, member.getId());
+            System.out.println("findMember = " + findMember.getClass());
+            System.out.println("findMember.id = " + findMember.getId());
+            System.out.println("findMember.username = " + findMember.getName());
 
             tx.commit();
         } catch (Exception e){
