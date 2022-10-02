@@ -2,6 +2,7 @@ package jpabook.jpashop.repository;
 
 import jpabook.jpashop.domain.Order;
 
+import jpabook.jpashop.repository.order.simplequery.OrderQueryDto;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
@@ -28,10 +29,14 @@ public class OrderRepository {
         return em.find(Order.class, id);
     }
 
-    public List<Order> findAllByString(OrderSearch orderSearch) {
+    public List<Order> findAll() {
+        return em.createQuery("select o from Order o", Order.class)
+                .getResultList();
+    }
 
-            String jpql = "select o from Order o join o.member m";
-            boolean isFirstCondition = true;
+    public List<Order> findAllByString(OrderSearch orderSearch) {
+        String jpql = "select o from Order o join o.member m";
+        boolean isFirstCondition = true;
 
         //주문 상태 검색
         if (orderSearch.getOrderStatus() != null) {
@@ -94,6 +99,14 @@ public class OrderRepository {
         cq.where(cb.and(criteria.toArray(new Predicate[criteria.size()])));
         TypedQuery<Order> query = em.createQuery(cq).setMaxResults(1000);
         return query.getResultList();
+    }
+
+    public List<Order> findAllWithMemberDelivery() {
+        return em.createQuery(
+                "select o from Order o" +
+                            " join fetch o.member m" +
+                            " join fetch o.delivery d", Order.class)
+                .getResultList();
     }
 
 }
