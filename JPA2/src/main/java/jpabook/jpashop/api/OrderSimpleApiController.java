@@ -3,10 +3,10 @@ package jpabook.jpashop.api;
 import jpabook.jpashop.domain.Address;
 import jpabook.jpashop.domain.Order;
 import jpabook.jpashop.domain.OrderStatus;
-import jpabook.jpashop.repository.order.simplequery.OrderQueryDto;
+import jpabook.jpashop.repository.order.simplequery.OrderSimpleQueryDto;
 import jpabook.jpashop.repository.OrderRepository;
 import jpabook.jpashop.repository.OrderSearch;
-import jpabook.jpashop.repository.order.simplequery.OrderQueryRepository;
+import jpabook.jpashop.repository.order.simplequery.OrderSimpleQueryRepository;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,7 +29,7 @@ import static java.util.stream.Collectors.toList;
 public class OrderSimpleApiController {
 
     private final OrderRepository orderRepository;
-    private final OrderQueryRepository orderQueryRepository;
+    private final OrderSimpleQueryRepository orderSimpleQueryRepository;
 
     /*
      * V1. 엔티티 직접 노출
@@ -46,42 +46,44 @@ public class OrderSimpleApiController {
     }
 
     @GetMapping("/api/v2/simple-orders")
-    public List<OrderDto> orderV2() {
+    public List<OrderSimpleDto> orderV2() {
         List<Order> orders = orderRepository.findAllByString(new OrderSearch());
-        List<OrderDto> result = orders.stream()
-                .map(o -> new OrderDto(o))
+        List<OrderSimpleDto> result = orders.stream()
+                .map(o -> new OrderSimpleDto(o))
                 .collect(toList());
 
         return result;
     }
 
+    // 1. 엔티티를 DTO로 변환
     // 패치 조인으로 내부에 원하는 부분만 가져옴
     @GetMapping("/api/v3/simple-orders")
-    public List<OrderDto> ordersV3() {
+    public List<OrderSimpleDto> ordersV3() {
         List<Order> orders = orderRepository.findAllWithMemberDelivery();
-        List<OrderDto> result = orders.stream()
-                .map(o-> new OrderDto(o))
+        List<OrderSimpleDto> result = orders.stream()
+                .map(o-> new OrderSimpleDto(o))
                 .collect(toList());
 
         return result;
     }
 
+    // 2. DTO로 직접 조회
     // 재사용성이 떨어진다.
     // API 스펙에 맞춘 코드가 리포지토리에 들어감
     @GetMapping("/api/v4/simple-orders")
-    public List<OrderQueryDto> orderV4() {
-        return orderQueryRepository.findOrderDtos();
+    public List<OrderSimpleQueryDto> orderV4() {
+        return orderSimpleQueryRepository.findOrderSimpleDtos();
     }
 
     @Data
-    static class OrderDto {
+    static class OrderSimpleDto {
         private Long orderId;
         private String name;
         private LocalDateTime orderDate; //주문시간
         private OrderStatus orderStatus;
         private Address address;
 
-        public OrderDto(Order order) {
+        public OrderSimpleDto(Order order) {
             orderId = order.getId();
             name = order.getMember().getName();
             orderDate = order.getOrderDate();

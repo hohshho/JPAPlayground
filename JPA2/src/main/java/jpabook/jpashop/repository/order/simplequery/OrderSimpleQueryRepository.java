@@ -8,16 +8,16 @@ import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
-public class OrderQueryRepository {
+public class OrderSimpleQueryRepository {
 
     private final EntityManager em;
 
-    public List<OrderQueryDto> findOrderDtos() {
+    public List<OrderSimpleQueryDto> findOrderSimpleDtos() {
         return em.createQuery(
-                        "select new jpabook.jpashop.repository.order.simplequery.OrderQueryDto(o.id, m.name, o.orderDate, o.status, d.address) " +
+                        "select new jpabook.jpashop.repository.order.simplequery.OrderSimpleQueryDto(o.id, m.name, o.orderDate, o.status, d.address) " +
                                 "from Order o" +
                                 " join o.member m" +
-                                " join o.delivery d", OrderQueryDto.class)
+                                " join o.delivery d", OrderSimpleQueryDto.class)
                 .getResultList();
     }
 }
