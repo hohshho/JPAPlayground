@@ -9,7 +9,7 @@ import javax.persistence.EntityManager;
 
 @Configuration
 @RequiredArgsConstructor
-public class Appconfig {
+public class AppConfig {
     private final EntityManager em;
 
     @Bean
